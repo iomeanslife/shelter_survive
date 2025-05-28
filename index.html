@@ -3,72 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shelter & Survive: Station Lockdown Prototype</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>Shelter & Survive: AP System Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .game-container {
+            background-color: #2a2a4a;
+            border: 2px solid #4a4a8a;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #8c8cff;
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        .status-section, .actions-section, .log-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #3a3a6a;
+            border-radius: 5px;
+            background-color: #3a3a5a;
+        }
+
+        .status-section p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+
+        .actions-section button {
+            background-color: #5a5acd;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        .actions-section button:hover:not([disabled]) {
+            background-color: #7a7acb;
+        }
+
+        .actions-section button:disabled {
+            background-color: #444466;
+            color: #999999;
+            cursor: not-allowed;
+        }
+
+        #endDayBtn {
+            background-color: #a04040;
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 12px 25px;
+            font-size: 1.1em;
+        }
+
+        #endDayBtn:hover:not([disabled]) {
+            background-color: #c06060;
+        }
+
+        #log {
+            background-color: #1f1f3f;
+            color: #b0b0b0;
+            border: 1px solid #4a4a8a;
+            border-radius: 5px;
+            padding: 10px;
+            height: 200px;
+            overflow-y: scroll;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+        }
+    </style>
+</head>
 <body>
 
-    <div id="startScreen" class="game-screen">
-        <h1>Shelter & Survive: Station Lockdown</h1>
-        <p>A perilous journey awaits.</p>
-        <button id="startButton" class="main-button">Start New Game</button>
-    </div>
+    <div class="game-container">
+        <h1>Shelter & Survive: AP System Demo</h1>
 
-    <div id="gameContainer" class="game-screen" style="display: none;">
-        <div class="header-section">
+        <div class="status-section">
             <h2>Station Status</h2>
-            <p>Day: <span id="dayCounter">0</span></p>
-            <p>Action Points: <span id="apCounter"></span></p>
-            <p>Station Integrity: <span id="stationIntegrity"></span></p>
-            <p>Hydration Level: <span id="hydrationLevel"></span></p>
+            <p>Day: <span id="dayDisplay">0</span></p>
+            <p>Action Points: <span id="apDisplay">0 / 0</span></p>
+            <p>Hydration Level: <span id="hydrationDisplay">100%</span></p>
         </div>
 
-        <div class="reactor-section">
-            <h3>Reactor Core</h3>
-            <p>Health: <span id="reactorHealth"></span></p>
-            <p>Output: <span id="reactorOutput"></span></p>
+       
+       <div class="actions-section">
+            <h2>Actions</h2>
+            <button id="exploreBtn" onclick="performAction('explore')">Explore</button>
+            <button id="scavengeBtn" onclick="performAction('scavenge')">Scavenge</button>
+            <button id="adjustReactorBtn" onclick="performAction('adjustReactor')">Adjust Reactor</button>
+            <button id="buildDefenseBtn" onclick="performAction('buildDefense')">Build Defense</button>
+            <button id="craftItemBtn" onclick="performAction('craftItem')">Craft Item</button>
+            <button id="resolveIssueBtn" onclick="performAction('resolveIssue')">Resolve Issue</button>
+            <button id="researchBtn" onclick="performAction('research')">Research</button>
+            <button id="endDayBtn" onclick="endDay()">End Day</button>
         </div>
-
-        <div class="threat-section">
-            <h3>Threat Level</h3>
-            <p>Current Threat: <span id="threatLevelDisplay"></span></p>
+        
+        <div class="log-section">
+            <h2>Game Log</h2>
+            <pre id="log"></pre>
         </div>
-
-        <div class="resources-section">
-            <h3>Resources</h3>
-            <ul id="resourcesList">
-                </ul>
-        </div>
-
-        <div class="modules-section">
-            <h3>Modules & Sectors</h3>
-            <ul id="moduleList">
-                </ul>
-        </div>
-
-        <div class="issues-section">
-            <h3>Active Issues</h3>
-            <ul id="activeIssuesList">
-                </ul>
-        </div>
-
-        <div id="actionButtonsContainer" class="action-buttons-container">
-            </div>
-
-        <button id="endDayButton" class="main-button end-day-button">End Day</button>
     </div>
 
-    <div id="morningReportScreen" class="game-screen" style="display: none;">
-        <div id="morningReportContent" class="report-content">
-            </div>
-        <button id="morningReportContinueButton" class="main-button">Continue to Next Day</button>
-    </div>
-
-    <div id="gameOverScreen" class="game-screen" style="display: none;">
-        <h1>GAME OVER!</h1>
-        <p id="gameOverReason" class="game-over-reason"></p>
-        <button id="newGameButton" class="main-button">Start New Game</button>
-    </div>
-
-    <script src="js/game.js"></script>
+    <script src="game.js"></script>
+    <script>
+        // Ensure the game initializes after the DOM is fully loaded.
+        document.addEventListener('DOMContentLoaded', initializeGame);
+    </script>
 </body>
 </html>
