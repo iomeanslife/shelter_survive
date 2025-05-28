@@ -154,8 +154,7 @@ function initializeGame() {
     document.getElementById('gameContainer').style.display = 'block';
     UIElements.gameOverScreen.style.display = 'none';
     UIElements.morningReportScreen.style.display = 'none';
-    UIElements.endDayButton.disabled = false;
-    
+
     startDay(); // Begin the first day
 }
 
@@ -196,9 +195,16 @@ function startDay() {
  * Ends the current day and initiates the night phase.
  */
 function endDay() {
-    if (gameState.isGameOver) return;
+    // This check is a safety, updateUI should prevent clicking if game is over
+    if (gameState.isGameOver) {
+        console.log("Cannot end day, game is already over.");
+        return;
+    }
+
     console.log("Day ends. Preparing for night...");
-    UIElements.endDayButton.disabled = true; // Disable button to prevent multiple clicks
+    UIElements.endDayButton.disabled = true; // Disable button to prevent multiple clicks during transition
+
+    // No AP cost for ending the day as per user request
 
     simulateNightAttack();
     showMorningReport();
@@ -362,7 +368,7 @@ function showMorningReport() {
             }
         });
     } else {
-        reportHtml += `<p>No outstanding critical issues detected.</p>`;
+        reportHtml += `<li>No outstanding critical issues detected.</li>`; // Corrected to append
     }
 
     reportHtml += `<h3>Observational Data / Damage Analysis:</h3>`;
@@ -396,7 +402,7 @@ function dismissMorningReport() {
         showGameOverScreen();
     } else {
         startDay(); // Proceed to next day
-        UIElements.endDayButton.disabled = false; // Re-enable end day button
+        UIElements.endDayButton.disabled = false; // Re-enable end day button for the new day
     }
 }
 
@@ -408,6 +414,8 @@ function showGameOverScreen() {
     document.getElementById('gameContainer').style.display = 'none';
     UIElements.gameOverScreen.style.display = 'flex'; // Use flex to center
     UIElements.gameOverReason.textContent = gameState.gameOverReason;
+    // The endDayButton is part of gameContainer, which is hidden, so no explicit disable is needed here.
+    // However, updateUI() also handles disabling it if isGameOver is true, which is good redundancy.
 }
 
 
@@ -489,6 +497,9 @@ function updateUI() {
     }
     UIElements.activeIssuesList.innerHTML = issuesHtml;
 
+    // End Day button is NOT disabled by AP count, ONLY by Game Over state
+    UIElements.endDayButton.disabled = gameState.isGameOver;
+
     if (gameState.isGameOver) {
         showGameOverScreen();
     }
@@ -564,10 +575,12 @@ function scavenge(moduleName) {
         resourceYields = { salvagedAlloys: 2, recycledPolymers: 2 };
     } else if (currentModuleType === 'Medium Risk') {
         yieldMultiplier = 1.5;
+        // Added recycledWater to Medium Risk
         resourceYields = { salvagedAlloys: 3, recycledPolymers: 3, conduitWiring: 1, recycledWater: 5 };
     } else if (currentModuleType === 'High Risk') {
         yieldMultiplier = 2;
-        resourceYields = { salvagedAlloys: 4, recycledPolymers: 4, conduitWiring: 2, recycledWater: 10, energyCells: 1, advancedCircuitry: 0.5 };
+        // Added recycledWater to High Risk
+        resourceYields = { salvagedAlloys: 4, recycledPolymers: 4, conduitWiring: 2, energyCells: 1, advancedCircuitry: 0.5, recycledWater: 10 };
     }
 
     console.log(`Scavenging in ${moduleName}. AP: ${gameState.actionPoints}. Threat +5.`);
@@ -795,7 +808,7 @@ function craftItem(itemType) {
 // Ensures the script runs only after the entire HTML document is loaded.
 document.addEventListener('DOMContentLoaded', () => {
     // Initial setup: Hide game elements, show start screen
-    document.getElementById('gameContainer').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'none';
     UIElements.morningReportScreen.style.display = 'none';
     UIElements.gameOverScreen.style.display = 'none';
     document.getElementById('startScreen').style.display = 'block';

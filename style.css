@@ -74,15 +74,14 @@ button:disabled {
     cursor: not-allowed;
 }
 
-
 .header-section {
     margin-bottom: 20px;
     padding: 15px;
     border: 1px solid #3a3a6a;
     border-radius: 5px;
-    background-color: #4f4f7b;
-    position: sticky;
-    top: 0;
+    background-color: #4f4f7b; /* Changed background color */
+    position: sticky; /* Added sticky positioning */
+    top: 0; /* Sticks to the top */
 }
 
 .reactor-section, .threat-section,
