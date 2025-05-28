@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shelter & Survive: Station Lockdown Prototype</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+
+    <div id="startScreen" class="game-screen">
+        <h1>Shelter & Survive: Station Lockdown</h1>
+        <p>A perilous journey awaits. Can you endure?</p>
+        <button id="startButton" class="main-button">Start New Game</button>
+    </div>
+
+    <div id="gameContainer" class="game-screen" style="display: none;">
+        <div class="header-section">
+            <h2>Station Status</h2>
+            <p>Day: <span id="dayCounter">0</span></p>
+            <p>Action Points: <span id="apCounter"></span></p>
+            <p>Station Integrity: <span id="stationIntegrity"></span></p>
+            <p>Hydration Level: <span id="hydrationLevel"></span></p>
+        </div>
+
+        <div class="reactor-section">
+            <h3>Reactor Core</h3>
+            <p>Health: <span id="reactorHealth"></span></p>
+            <p>Output: <span id="reactorOutput"></span></p>
+        </div>
+
+        <div class="threat-section">
+            <h3>Threat Level</h3>
+            <p>Current Threat: <span id="threatLevelDisplay"></span></p>
+        </div>
+
+        <div class="resources-section">
+            <h3>Resources</h3>
+            <ul id="resourcesList">
+                </ul>
+        </div>
+
+        <div class="modules-section">
+            <h3>Modules & Sectors</h3>
+            <ul id="moduleList">
+                </ul>
+        </div>
+
+        <div class="issues-section">
+            <h3>Active Issues</h3>
+            <ul id="activeIssuesList">
+                </ul>
+        </div>
+
+        <div id="actionButtonsContainer" class="action-buttons-container">
+            </div>
+
+        <button id="endDayButton" class="main-button end-day-button">End Day</button>
+    </div>
+
+    <div id="morningReportScreen" class="game-screen" style="display: none;">
+        <div id="morningReportContent" class="report-content">
+            </div>
+        <button id="morningReportContinueButton" class="main-button">Continue to Next Day</button>
+    </div>
+
+    <div id="gameOverScreen" class="game-screen" style="display: none;">
+        <h1>GAME OVER!</h1>
+        <p id="gameOverReason" class="game-over-reason"></p>
+        <button id="newGameButton" class="main-button">Start New Game</button>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
