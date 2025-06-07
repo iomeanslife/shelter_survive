@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shelter & Survive: AP System Demo</title>
+    <title>Shelter & Survive: Resource Management Demo</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,31 +24,53 @@
             border-radius: 8px;
             padding: 25px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            max-width: 600px;
+            max-width: 800px; /* Increased max-width for more content */
             width: 100%;
             margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 20px; /* Gap between sections */
         }
 
         h1, h2, h3 {
             color: #8c8cff;
             margin-top: 0;
+            grid-column: 1 / -1; /* Make titles span both columns */
         }
 
         p {
             margin-bottom: 10px;
         }
 
-        .status-section, .actions-section, .log-section {
-            margin-bottom: 20px;
+        .status-section, .resources-section, .modules-section, .actions-section {
+            margin-bottom: 0; /* Removed bottom margin as grid gap handles spacing */
             padding: 15px;
             border: 1px solid #3a3a6a;
             border-radius: 5px;
             background-color: #3a3a5a;
         }
 
-        .status-section p {
+        .status-section {
+            grid-column: 1 / -1; /* Status spans full width */
+        }
+
+        .status-section p, .resources-section ul li {
             margin: 5px 0;
             font-size: 1.1em;
+        }
+
+        .resources-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .actions-section {
+            grid-column: 1 / -1; /* Actions span full width */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px; /* Gap between buttons */
         }
 
         .actions-section button {
@@ -59,8 +81,8 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
-            margin: 5px;
             transition: background-color 0.2s ease;
+            white-space: nowrap; /* Prevent button text from wrapping */
         }
 
         .actions-section button:hover:not([disabled]) {
@@ -86,6 +108,11 @@
             background-color: #c06060;
         }
 
+        .log-section {
+            grid-column: 1 / -1; /* Log spans full width */
+            margin-top: 20px;
+        }
+
         #log {
             background-color: #1f1f3f;
             color: #b0b0b0;
@@ -103,7 +130,7 @@
 <body>
 
     <div class="game-container">
-        <h1>Shelter & Survive: AP System Demo</h1>
+        <h1>Shelter & Survive: Resource Management Demo</h1>
 
         <div class="status-section">
             <h2>Station Status</h2>
@@ -112,8 +139,19 @@
             <p>Hydration Level: <span id="hydrationDisplay">100%</span></p>
         </div>
 
-       
-       <div class="actions-section">
+        <div class="resources-section">
+            <h2>Resources</h2>
+            <ul id="resourcesList">
+                </ul>
+        </div>
+
+        <div class="modules-section">
+            <h2>Modules</h2>
+            <ul id="moduleList">
+                </ul>
+        </div>
+
+        <div class="actions-section">
             <h2>Actions</h2>
             <button id="exploreBtn" onclick="performAction('explore')">Explore</button>
             <button id="scavengeBtn" onclick="performAction('scavenge')">Scavenge</button>
@@ -124,7 +162,7 @@
             <button id="researchBtn" onclick="performAction('research')">Research</button>
             <button id="endDayBtn" onclick="endDay()">End Day</button>
         </div>
-        
+
         <div class="log-section">
             <h2>Game Log</h2>
             <pre id="log"></pre>
