@@ -54,7 +54,7 @@ const gameState = {
     fabricationUnit: {
         active: true, // Assume active unless explicitly damaged
         baseEnergyCost: 5, // Base energy cost even when idle/not crafting
-        energyCostPerCraftingItem: 15, // <--- ADDED THIS FIELD
+        energyCostPerCraftingItem: 15,
     },
     // Game over flag
     isGameOver: false,
@@ -77,14 +77,12 @@ const resourceYields = {
 };
 
 // --- Energy Consumption Definitions for Systems/Defenses ---
-// Note: systemDefinitions.fabricationUnit.energyCostPerCraftingItem is now in gameState.fabricationUnit
 const systemDefinitions = {
     lifeSupportSystem: {
         energyCost: 10,
     },
     fabricationUnit: {
-        baseEnergyCost: 5, // Base energy cost even when idle/not crafting
-        // Removed energyCostPerCraftingItem as it's now in gameState.fabricationUnit
+        baseEnergyCost: 5,
     }
 };
 
@@ -431,8 +429,6 @@ function endDay() {
     gameState.reactor.currentPowerOutput = totalEnergyDemand; // Set actual output
 
     // 2. Apply reactor health penalties to heat generation
-    // This is for *display* and *calculation* purposes. Reactor health affects *how much heat* is generated
-    // or how much power can be supplied. For this task, it affects heat generation rate.
     let effectiveHeatGenerationPerEnergy = gameState.reactor.heatGenerationPerEnergy;
     effectiveHeatGenerationPerEnergy = applyReactorHealthPenalties(effectiveHeatGenerationPerEnergy);
 
@@ -462,10 +458,9 @@ function endDay() {
     }
 
     // 5. Apply reactor health degradation from uncooled heat/overheating
-    // Damage if heat is above optimal after cooling, or if uncooled heat remains
     if (gameState.reactor.currentHeat > gameState.reactor.optimalOperatingTemperature || uncooledHeat > 0) {
         const excessHeat = Math.max(0, gameState.reactor.currentHeat - gameState.reactor.optimalOperatingTemperature);
-        const damageAmount = Math.ceil((excessHeat + uncooledHeat) / 10); // More uncooled heat = more damage
+        const damageAmount = Math.ceil((excessHeat + uncooledHeat) / 10);
         gameState.reactor.health = Math.max(0, gameState.reactor.health - damageAmount);
         logMessage(`Reactor health reduced by ${damageAmount} due to overheating! Health: ${gameState.reactor.health}%.`);
     } else {
@@ -477,8 +472,6 @@ function endDay() {
     // Simulate night passage (e.g., show a 'Night Active' screen, run calculations)
     setTimeout(() => {
         logMessage("Night Cycle complete. Awaiting Morning Report...");
-        // In a real game, this would lead to a Morning Report screen.
-        // For this demo, we'll just go straight to the next day.
         startNewDay();
         checkGameOver(); // Check game over conditions after night calculations and before next day actions
     }, 2000); // Simulate 2-second night
@@ -493,10 +486,13 @@ function checkGameOver() {
     if (gameState.reactor.health <= 0) {
         gameOverReason = "Reactor Meltdown! The station is gone.";
     }
+    // Check for Dehydration Game Over (Milestone 2.1 Task 4)
+    if (gameState.hydrationLevel <= 0) {
+        gameOverReason = "Dehydration claimed you. You succumbed to the harsh realities of space.";
+    }
     // Add other game over conditions as they are implemented:
     // if (gameState.stationIntegrity <= 0) { gameOverReason = "Station integrity compromised!"; }
-    // if (gameState.hydrationLevel <= 0 && gameState.currentDay > 1) { gameOverReason = "Dehydration claimed you."; }
-
+    
     if (gameOverReason) {
         gameOver(gameOverReason);
     }
@@ -521,7 +517,6 @@ function gameOver(reason) {
     ui.endDayBtn.disabled = true;
 
     // Potentially show a dedicated Game Over screen (UI element)
-    // For now, logging to console and disabling buttons.
 }
 
 
@@ -570,9 +565,8 @@ function calculateTotalEnergyDemand() {
 
     // Fabrication Unit (base cost + cost for items in queue)
     if (gameState.fabricationUnit.active) {
-        totalDemand += gameState.fabricationUnit.baseEnergyCost; // Use base energy from gameState
-        // Assume crafting items consume energy from reactor only if they are 'in progress'
-        totalDemand += gameState.craftingQueue.length * gameState.fabricationUnit.energyCostPerCraftingItem; // Use from gameState
+        totalDemand += gameState.fabricationUnit.baseEnergyCost;
+        totalDemand += gameState.craftingQueue.length * gameState.fabricationUnit.energyCostPerCraftingItem;
     }
 
     // Deployed Defenses
@@ -600,9 +594,8 @@ function calculateTotalEnergyDemand() {
 function applyReactorHealthPenalties(baseHeatGenRate) {
     let multiplier = 1;
     if (gameState.reactor.health < 100) {
-        // Example: 1% increased heat gen for every 5% health lost below 100
         const healthLost = 100 - gameState.reactor.health;
-        multiplier += (healthLost / 5) * 0.01; // e.g., 50% health lost (50), multiplier is 1 + (50/5)*0.01 = 1 + 0.1 = 1.1 (10% more heat)
+        multiplier += (healthLost / 5) * 0.01;
         logMessage(`Reactor health (${gameState.reactor.health}%) applies a heat generation penalty. Multiplier: ${multiplier.toFixed(2)}x`);
     }
     return baseHeatGenRate * multiplier;
