@@ -137,6 +137,8 @@
             <p>Day: <span id="dayDisplay">0</span></p>
             <p>Action Points: <span id="apDisplay">0 / 0</span></p>
             <p>Hydration Level: <span id="hydrationDisplay">100%</span></p>
+            <p>Reactor Health: <span id="reactorHealthDisplay">100%</span></p>
+            <p>Reactor Heat: <span id="reactorHeatDisplay">0</span></p>
         </div>
 
         <div class="resources-section">
@@ -153,13 +155,13 @@
 
         <div class="actions-section">
             <h2>Actions</h2>
-            <button id="exploreBtn" onclick="performAction('explore')">Explore</button>
-            <button id="scavengeBtn" onclick="performAction('scavenge')">Scavenge</button>
-            <button id="adjustReactorBtn" onclick="performAction('adjustReactor')">Adjust Reactor</button>
-            <button id="buildDefenseBtn" onclick="performAction('buildDefense')">Build Defense</button>
-            <button id="craftItemBtn" onclick="performAction('craftItem')">Craft Item</button>
-            <button id="resolveIssueBtn" onclick="performAction('resolveIssue')">Resolve Issue</button>
-            <button id="researchBtn" onclick="performAction('research')">Research</button>
+            <button id="exploreBtn">Explore</button>
+            <button id="scavengeBtn">Scavenge</button>
+            <button id="repairReactorBtn">Repair Reactor</button>
+            <button id="buildDefenseBtn">Build Defense</button>
+            <button id="craftItemBtn">Craft Item</button>
+            <button id="resolveIssueBtn">Resolve Issue</button>
+            <button id="researchBtn">Research</button>
             <button id="endDayBtn" onclick="endDay()">End Day</button>
         </div>
 
